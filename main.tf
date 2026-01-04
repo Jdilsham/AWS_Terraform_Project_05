@@ -19,3 +19,35 @@ module "vpc" {
     Project = var.project_name
   }
 }
+
+module "web-sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "5.3.1"
+
+  name        = "${var.project_name}-web-sg"
+  description = "Security group for web instances"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress_with_cidr_blocks = [
+    {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = var.ssh_allowed_cidr
+      description = "Allow SSH from my IP"
+    },
+    {
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_blocks = "0.0.0.0/0"
+      description = "Allow HTTP from my IP"
+    }
+  ]
+
+  egress_rules = ["all-all"]
+
+  tags = {
+    Project = var.project_name
+  }
+}

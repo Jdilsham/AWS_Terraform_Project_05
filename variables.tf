@@ -22,6 +22,11 @@ variable "public_subnet_cidrs" {
   default     = "10.0.1.0/24"
 }
 
+variable "ssh_allowed_cidr" {
+  description = "CIDR block allowed to SSH into EC2"
+  type        = string
+}
+
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
