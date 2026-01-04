@@ -9,7 +9,7 @@ module "vpc" {
   name = var.project_name
   cidr = var.vpc_cidr
 
-  azs            = [var.aws_region]
+  azs            = ["us-east-1a"]
   public_subnets = [var.public_subnet_cidrs]
 
   enable_dns_hostnames = true
@@ -53,19 +53,19 @@ module "web-sg" {
 }
 
 
-module "web_ec2"{
-  source = "terraform-aws-modules/ec2-instance/aws"
+module "web_ec2" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~>6.0"
 
   name = "${var.project_name}-web-server"
 
-  ami           = var.ami_id
-  instance_type = var.instance_type
-  key_name      = var.key_pair_name
-  monitoring = false
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+  key_name                    = var.key_pair_name
+  monitoring                  = false
   associate_public_ip_address = true
 
-  subnet_id = module.vpc.public_subnets[0]
+  subnet_id              = module.vpc.public_subnets[0]
   vpc_security_group_ids = [module.web-sg.security_group_id]
 
   user_data = <<-EOF
@@ -79,3 +79,5 @@ module "web_ec2"{
     Project = var.project_name
   }
 }
+
+
